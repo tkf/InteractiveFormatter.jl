@@ -2,7 +2,7 @@ module InteractiveFormatter
 
 using JuliaFormatter: format_text
 using REPL: LineEdit, LineEditREPL, REPL
-using REPL.LineEdit: InputAreaState, edit_insert, input_string
+using REPL.LineEdit: InputAreaState, edit_insert, input_string, refresh_line
 
 function format_prompt(s, _...)
     code = try
@@ -11,11 +11,12 @@ function format_prompt(s, _...)
         println(stderr)
         @error "Error in `format_prompt`" exception = (err, catch_backtrace())
         println(stderr)
-        LineEdit.refresh_line(s)
+        refresh_line(s)
         return
     end
     take!(LineEdit.buffer(s))  # empty prompt
     edit_insert(s, code)
+    refresh_line(s)
 end
 
 """
